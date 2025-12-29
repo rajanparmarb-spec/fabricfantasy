@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FabricFantasy | Ladies Fashion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">FabricFantasy</div>
+
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+    <nav id="nav-menu">
+        <a href="#">Home</a>
+        <a href="categories.html">Categories</a>
+        <a href="#shop">Shop</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#">Contact</a>
+        <a href="cart.html" class="cart">
+            <i class="fa fa-shopping-cart  fa-lg" style="color:white"></i>
+            <span id="cart-count">0</span>
+        </a>
+    </nav>
+</header>
+<!-- Products FIRST (Phone users see this immediately) -->
+<section class="products" id="shop">
+    <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- Categories SECOND -->
+<section class="categories" id="categories">
+    <h2>Shop by Category</h2>
+    <div class="category-grid">
+        <div class="category">Dresses</div>
+        <div class="category">Kurtis</div>
+        <div class="category">Sarees</div>
+        <div class="category">Ethnic Wear</div>
+    </div>
+</section>
+
+<!-- Featured Banner THIRD -->
+<section class="banner">
+    <h2>Festive Sale</h2>
+    <p>Up to 40% OFF on selected items</p>
+</section>
+
+<!-- Hero LAST (Brand message, optional scroll-back) -->
+<section class="hero">
+    <h1>Elegance for Every Woman</h1>
+    <p>Premium ladies wear crafted with love</p>
+    <button onclick="scrollToShop()">Explore Collection</button>
+</section>
+
+
+<!-- Testimonials -->
+<section class="reviews" id="reviews">
+    <h2>What Our Customers Say</h2>
+    <div class="review-grid">
+        <div class="review">
+            ⭐⭐⭐⭐⭐
+            <p>Beautiful quality and fast delivery!</p>
+            <span>- Anjali</span>
+        </div>
+        <div class="review">
+            ⭐⭐⭐⭐☆
+            <p>Elegant designs, loved the fabric.</p>
+            <span>- Priya</span>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+    <h2>Join FabricFantasy</h2>
+    <p>Get exclusive offers & updates</p>
+    <input type="email" placeholder="Enter your email">
+    <button>Subscribe</button>
+</section>
+
+
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 FabricFantasy | All Rights Reserved</p>
+</footer>
+<a href="cart.html" class="floating-checkout" aria-label="View Cart">
+    <i class="fa fa-shopping-cart"></i>
+    <span class="floating-cart-count">0</span>
+</a>
+
+
+
+<script src="script.js"></script>
+<script>
+	document.addEventListener('DOMContentLoaded', function() {
+		// Your function to run after the DOM is ready
+		loadProducts();
+	});
+</script>
+</body>
+</html>
+

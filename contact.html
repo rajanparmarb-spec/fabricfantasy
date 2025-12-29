@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | FabricFantasy</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Header -->
+<header>
+    <div class="logo">FabricFantasy</div>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <nav id="nav-menu">
+        <a href="index.html">Home</a>
+        <a href="categories.html">Categories</a>
+        <a href="index.html#shop">Shop</a>
+        <a href="contact.html">Contact</a>
+        <a href="#" class="cart">🛒 <span id="cart-count">0</span></a>
+    </nav>
+</header>
+
+<!-- Page Title -->
+<section class="page-title">
+    <h1>Contact Us</h1>
+    <p>We’d love to hear from you</p>
+</section>
+
+<!-- Contact Section -->
+<section class="contact-section">
+
+    <!-- Contact Info -->
+    <div class="contact-info">
+        <h2>Get in Touch</h2>
+        <p><strong>Email:</strong> support@fabricfantasy.com</p>
+        <p><strong>Phone:</strong> +91 9XXXXXXXXX</p>
+        <p><strong>Address:</strong> India</p>
+        <p>Customer support available 10 AM – 7 PM</p>
+    </div>
+
+    <!-- Contact Form -->
+    <div class="contact-form">
+        <h2>Send a Message</h2>
+
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="email" id="email" placeholder="Your Email" required>
+            <textarea id="message" placeholder="Your Message" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+
+        <p id="successMessage"></p>
+    </div>
+
+</section>
+
+<!-- Footer -->
+<footer>
+    <p>© 2025 FabricFantasy | All Rights Reserved</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
+
