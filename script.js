@@ -1,21 +1,25 @@
 let cartCount = 0;
 
 function addToCart(button) {
-    const productCard = button.parentElement;
-    const name = productCard.querySelector('h3').innerText;
-    const priceText = productCard.querySelector('p').innerText;
-    const price = parseInt(priceText.replace(/[₹,]/g, ''));;
-    const image = productCard.querySelector('img').src;
+  const productCard = button.parentElement;
+  const name = productCard.querySelector('h3').innerText;
+  const priceText = productCard.querySelector('p').innerText;
+  const price = parseInt(priceText.replace(/[₹,]/g, ''));
+  const image = productCard.querySelector('img').src;
+  
+  const activeSize = productCard.querySelector('.size-btn.active');
+  const size = activeSize ? activeSize.getAttribute('data-size') : 'M';
 
-    console.log(priceText);
-        console.log(price);
-
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push({name, price, image});
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-    updateFloatingCartCount();
-
+  let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  cart.push({name, price, image, size});
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+  updateFloatingCartCount();
+  
+  button.innerText = '✓ Added';
+  setTimeout(() => {
+      button.innerText = 'Add to Cart';
+  }, 1500);
 }
 
 
@@ -64,31 +68,52 @@ function updateFloatingCartCount() {
 updateCartCount();
 updateFloatingCartCount();
 
+// ========== script.js (REPLACE loadProducts and addToCart functions) ==========
 
 function loadProducts() {
-const sheetURL = "https://opensheet.elk.sh/1XXXU5lQDFYOvpWEAXZQEL3jlIGmCgQ8erj7cdAzvgIc/Sheet1";
-
-fetch(sheetURL)
-  .then(res => res.json())
-  .then(data => {
-    const grid = document.getElementById("productGrid");
-    console.log(data);
-
-    data.forEach(item => {
-      const product = document.createElement("div");
-      product.className = "product";
-
-      product.innerHTML = `
-        <img src="${item.image}" alt="${item.name}">
-        <h3>${item.name}</h3>
-        <p>₹${Number(item.price).toLocaleString()}</p>
-        <button onclick="addToCart(this)">Add to Cart</button>
-      `;
-    console.log(item);
-
-      grid.appendChild(product);
-    });
-  })
-  .catch(err => console.error("Error loading products", err));
-}
-
+  const sheetURL = "https://opensheet.elk.sh/1XXXU5lQDFYOvpWEAXZQEL3jlIGmCgQ8erj7cdAzvgIc/Sheet1";
+  
+  fetch(sheetURL)
+    .then(res => res.json())
+    .then(data => {
+      const grid = document.getElementById("productGrid");
+      console.log(data);
+  
+      data.forEach(item => {
+        const product = document.createElement("div");
+        product.className = "product";
+  
+        product.innerHTML = `
+          <img src="${item.image}" alt="${item.name}">
+          <h3>${item.name}</h3>
+          <p>₹${Number(item.price).toLocaleString()}</p>
+          <div class="size-selector">
+            <span class="size-label">Size:</span>
+            <div class="size-options">
+              <button class="size-btn" data-size="XS">XS</button>
+              <button class="size-btn" data-size="S">S</button>
+              <button class="size-btn active" data-size="M">M</button>
+              <button class="size-btn" data-size="L">L</button>
+              <button class="size-btn" data-size="XL">XL</button>
+              <button class="size-btn" data-size="XXL">XXL</button>
+            </div>
+          </div>
+          <button class="add-to-cart-btn" onclick="addToCart(this)">Add to Cart</button>
+        `;
+  
+        grid.appendChild(product);
+      });
+  
+      // Add size button click handlers
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const parent = this.closest('.size-options');
+          parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+          this.classList.add('active');
+        });
+      });
+    })
+    .catch(err => console.error("Error loading products", err));
+  }
+  
