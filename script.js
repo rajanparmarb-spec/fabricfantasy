@@ -21,13 +21,10 @@ function addToCart(button) {
   setTimeout(() => (button.innerText = "ADD TO CART"), 1500);
 }
 
-
-
 function updateCartCount() {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     document.getElementById('cart-count').innerText = cart.length;
 }
-
 
 function scrollToShop() {
     document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
@@ -49,6 +46,7 @@ if (form) {
         form.reset();
     });
 }
+
 function updateFloatingCartCount() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
     const badge = document.querySelector('.floating-cart-count');
@@ -68,7 +66,12 @@ function updateFloatingCartCount() {
 updateCartCount();
 updateFloatingCartCount();
 
-// ========== script.js (REPLACE loadProducts and addToCart functions) ==========
+// GLOBAL function to handle size clicks - called from inline onclick
+window.selectSize = function(button) {
+  const sizesContainer = button.parentElement;
+  sizesContainer.querySelectorAll(".size").forEach(s => s.classList.remove("active"));
+  button.classList.add("active");
+}
 
 function loadProducts() {
   const sheetURL = "https://opensheet.elk.sh/1XXXU5lQDFYOvpWEAXZQEL3jlIGmCgQ8erj7cdAzvgIc/Sheet1";
@@ -82,69 +85,44 @@ function loadProducts() {
       data.forEach(item => {
         const product = document.createElement("div");
         product.className = "product";
-  
 
-product.innerHTML = `
-  <div class="fashion-product"
-       onclick="openProduct(
-         '${item.image}',
-         '${item.name.replace(/'/g, "\\'")}',
-         '${item.price}'
-       )">
+        product.innerHTML = `
+          <div class="fashion-product"
+               onclick="openProduct(
+                 '${item.image}',
+                 '${item.name.replace(/'/g, "\\'")}',
+                 '${item.price}'
+               )">
 
-    <img src="${item.image}" alt="${item.name}">
+            <img src="${item.image}" alt="${item.name}">
 
-    <div class="fashion-info">
-      <h3>${item.name}</h3>
-      <p class="price">₹${Number(item.price).toLocaleString()}</p>
-    <div class="option">
+            <div class="fashion-info">
+              <h3>${item.name}</h3>
+              <p class="price">₹${Number(item.price).toLocaleString()}</p>
+              <div class="option">
+                <div class="sizes" onclick="event.stopPropagation()">
+                  <button class="size" onclick="selectSize(this)">XS</button>
+                  <button class="size" onclick="selectSize(this)">S</button>
+                  <button class="size active" onclick="selectSize(this)">M</button>
+                  <button class="size" onclick="selectSize(this)">L</button>
+                  <button class="size" onclick="selectSize(this)">XL</button>
+                </div>
+              </div>
 
-      <div class="sizes" onclick="event.stopPropagation()">
-        <button class="size">XS</button>
-        <button class="size">S</button>
-        <button class="size active">M</button>
-        <button class="size">L</button>
-        <button class="size">XL</button>
-      </div>
-      </div>
-
-      <button class="add-cart-btn"
-        onclick="event.stopPropagation(); addToCart(this)">
-        ADD TO CART
-      </button>
-    </div>
-  </div>
-`;
-
+              <button class="add-cart-btn"
+                onclick="event.stopPropagation(); addToCart(this)">
+                ADD TO CART
+              </button>
+            </div>
+          </div>
+        `;
 
         grid.appendChild(product);
       });
-document.addEventListener("click", function (e) {
-      console.log("helloworld");
-
-  if (e.target.classList.contains("size")) {
-    const group = e.target.parentElement;
-    console.log("helloworld");
-    group.querySelectorAll(".size").forEach(s => s.classList.remove("active"));
-    e.target.classList.add("active");
-  }
-});
-
-
-  
-      // Add size button click handlers
-      document.querySelectorAll('.size-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-          e.stopPropagation();
-          const parent = this.closest('.size-options');
-          parent.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-        });
-      });
     })
     .catch(err => console.error("Error loading products", err));
-  }
-  
+}
+
 function openProduct(image, name, price) {
   const productData = {
     image,
