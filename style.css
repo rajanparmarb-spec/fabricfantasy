@@ -818,9 +818,9 @@ footer {
    =============================== */
 
 .customer-form {
-    margin-top: 20px;
+    margin-top: 0px;
     background: linear-gradient(135deg, #fafafa, #ffffff);
-    padding: 20px;
+    padding: 0px;
     border-radius: 14px;
     border: 1px solid #f0f0f0;
 }
@@ -956,7 +956,7 @@ footer {
     .cart-right {
         position: static;
         order: 1;
-        margin-top: 30px;
+        margin-top: 8px;
     }
 
     .cart-left h2 {
@@ -1173,4 +1173,153 @@ footer {
 } */
 
 
+
+/* SUCCESS POPUP */
+.success-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.success-card {
+  background: #fff;
+  border-radius: 22px;
+  padding: 36px 28px;
+  text-align: center;
+  max-width: 360px;
+  width: 90%;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+  animation: popIn 0.4s ease;
+}
+
+.success-emoji {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.success-card h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.success-card p {
+  font-size: 15px;
+  color: #555;
+}
+
+.success-sub {
+  margin-top: 6px;
+  color: #777;
+}
+
+.success-card button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #f4b400, #ffd76a);
+  color: #111;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.success-card button:hover {
+  transform: translateY(-2px);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ===============================
+   MOBILE CART SUMMARY – FIT & MODERN
+   =============================== */
+@media (max-width: 768px) {
+
+  /* Overall cart page spacing */
+  .cart-page {
+    padding: 10px;
+  }
+
+  /* Stack layout cleanly */
+  .cart-layout {
+    gap: 16px;
+  }
+
+  /* RIGHT SUMMARY CARD */
+  .cart-summary-box {
+    padding: 18px 16px;
+    border-radius: 18px;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  }
+
+  /* Section headings */
+  .cart-summary-box h3 {
+    font-size: 16px;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  /* Customer form spacing */
+  .customer-form {
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .form-group {
+    margin-bottom: 14px;
+  }
+
+  .form-group label {
+    font-size: 11px;
+    margin-bottom: 6px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 12px 14px;
+    font-size: 14px;
+    border-radius: 12px;
+  }
+
+  /* Order summary line */
+  .summary-line {
+    padding: 14px;
+    border-radius: 14px;
+    font-size: 15px;
+    margin-bottom: 16px;
+  }
+
+  .summary-line strong {
+    font-size: 18px;
+  }
+
+  /* Checkout button – app style */
+  .checkout-btn {
+    padding: 16px;
+    font-size: 15px;
+    border-radius: 14px;
+    letter-spacing: 0.6px;
+  }
+
+  /* Secure text */
+  .secure-text {
+    font-size: 12px;
+    margin-top: 10px;
+  }
+}
 

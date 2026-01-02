@@ -117,6 +117,28 @@ body {
   cursor: pointer;
 }
 
+.add-cart-btn {
+        width: 100%;
+    padding: 18px;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(135deg, #111, #333);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.add-cart-btn:hover {
+    background: linear-gradient(135deg, #f4b400, #ffd76a);
+    color: #111;
+    transform: translateY(-2px);
+}
+
 .size-guide {
   margin-top: 14px;
   font-size: 12px;
@@ -135,4 +157,72 @@ body {
   .product-details {
     position: static;
   }
+}
+
+/* Floating Cart Button */
+.floating-checkout {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 54px;
+    height: 54px;
+    background: linear-gradient(135deg, #111, #333);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    z-index: 999;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.floating-checkout i {
+    font-size: 20px;
+}
+
+.floating-checkout:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 40px rgba(0,0,0,0.45);
+    background: linear-gradient(135deg, #f4b400, #ffd76a);
+    color: #111;
+}
+
+.floating-cart-count {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #f4b400;
+    color: #111;
+    font-size: 11px;
+    font-weight: 700;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+@media (max-width: 768px) {
+    .floating-checkout {
+        width: 48px;
+        height: 48px;
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .floating-checkout i {
+        font-size: 18px;
+    }
+
+    .floating-cart-count {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        top: -5px;
+        right: -5px;
+    }
 }

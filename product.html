@@ -4,28 +4,38 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Product Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="product.css">
 </head>
 <body>
 
-<section class="product-page">
+<!-- Header -->
+<header style="position: sticky; top: 0; z-index: 999; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(18px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.6);">
+    <div class="logo" style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #111;">FabricFantasy</div>
+    <nav style="display: flex; gap: 26px; align-items: center;">
+        <a href="index.html" style="text-decoration: none; font-size: 14px; font-weight: 500; color: #374151;">Home</a>
+        <a href="index.html#shop" style="text-decoration: none; font-size: 14px; font-weight: 500; color: #374151;">Shop</a>
+        <a href="cart.html" class="cart" style="position: relative; text-decoration: none; color: #374151;">
+            <i class="fa fa-shopping-cart fa-lg"></i>
+            <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: #f4b400; color: #111; font-size: 12px; padding: 2px 6px; border-radius: 50%; font-weight: bold;">0</span>
+        </a>
+    </nav>
+</header>
 
+<section class="product-page">
   <!-- LEFT : IMAGES -->
   <div class="product-images">
-<img id="productImage" src="" alt="Product Image">
+    <img id="productImage" src="" alt="Product Image">
     <img src="https://images.unsplash.com/photo-1520974735194-8f0c1f6a4f7b" alt="Back View">
   </div>
-
+  
   <!-- RIGHT : DETAILS -->
   <div class="product-details">
-<h1 id="productName"></h1>
-<p id="productPrice"></p>
-
+    <h1 id="productName"></h1>
+    <p id="productPrice"></p>
     <p class="description">
-      Crafted from fluid satin, this elegant pencil skirt features
-      a sculptural bow detail at the waist for refined femininity.
     </p>
-
+    
     <!-- COLOR -->
     <div class="option">
       <span>Color:</span>
@@ -33,35 +43,137 @@
         <span class="color purple"></span>
       </div>
     </div>
-
+    
     <!-- SIZE -->
     <div class="option">
       <span>Size:</span>
       <div class="sizes">
-        <button>XS</button>
-        <button>S</button>
-        <button class="active">M</button>
-        <button>L</button>
-        <button>XL</button>
+        <!-- <button class="size-btn" onclick="selectProductSize(this)">XS</button>
+        <button class="size-btn" onclick="selectProductSize(this)">S</button>
+        <button class="size-btn active" onclick="selectProductSize(this)">M</button>
+        <button class="size-btn" onclick="selectProductSize(this)">L</button>
+        <button class="size-btn" onclick="selectProductSize(this)">XL</button> -->
       </div>
     </div>
-
-    <button class="add-cart">ADD TO CART</button>
+    
+    <button class="add-cart-btn" onclick="addProductToCart()">ADD TO CART</button>
     <p class="size-guide">Size Guide</p>
   </div>
-
 </section>
-<script>
-  const product = JSON.parse(localStorage.getItem("selectedProduct"));
 
+<script>
+  // Load product data
+  const product = JSON.parse(localStorage.getItem("selectedProduct"));
   if (product) {
     document.getElementById("productImage").src = product.image;
     document.getElementById("productName").innerText = product.name;
-    document.getElementById("productPrice").innerText =
-      "₹" + Number(product.price).toLocaleString();
+    document.getElementById("productPrice").innerText = "₹" + Number(product.price).toLocaleString();
+    
+    // Update description if available
+    const descriptionEl = document.querySelector(".description");
+    if (product.description && descriptionEl) {
+      descriptionEl.innerText = product.description;
+    }
+    
+    // Generate size buttons from API data
+    const sizesContainer = document.querySelector(".sizes");
+    if (product.sizes && sizesContainer) {
+      const availableSizes = product.sizes.split(',').map(s => s.trim());
+      sizesContainer.innerHTML = '';
+      
+      availableSizes.forEach((size, index) => {
+        const button = document.createElement('button');
+        button.className = 'size-btn';
+        button.innerText = size;
+        button.onclick = function() { selectProductSize(this); };
+        
+        // Set middle size as active by default
+        if (index === Math.floor(availableSizes.length / 2)) {
+          button.classList.add('active');
+        }
+        
+        sizesContainer.appendChild(button);
+      });
+    }
   }
+
+  // Update cart count on page load
+  function updateCartCount() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    document.getElementById('cart-count').innerText = cart.length;
+  }
+  updateCartCount();
+
+  // Size selection function
+  window.selectProductSize = function(button) {
+    const sizesContainer = button.parentElement;
+    sizesContainer.querySelectorAll(".size-btn").forEach(s => s.classList.remove("active"));
+    button.classList.add("active");
+  }
+
+  // Add to cart function
+  window.addProductToCart = function() {
+    if (!product) {
+      alert("Product data not found!");
+      return;
+    }
+
+    const selectedSize = document.querySelector(".sizes .size-btn.active");
+    if (!selectedSize) {
+      alert("Please select a size!");
+      return;
+    }
+
+    const size = selectedSize.innerText;
+    
+    let cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({
+      name: product.name,
+      price: Number(product.price),
+      image: product.image,
+      size: size
+    });
+    
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+    updateFloatingCartCount();
+
+    // Visual feedback
+    const button = document.querySelector(".add-cart-btn");
+    const originalText = button.innerText;
+    button.innerText = "✓ ADDED";
+    
+    setTimeout(() => {
+      button.innerText = originalText;
+    }, 1500);
+  }
+
+  // Update floating cart count
+  function updateFloatingCartCount() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const badge = document.querySelector('.floating-cart-count');
+
+    if (!badge) return;
+
+    badge.textContent = cart.length;
+
+    if (cart.length === 0) {
+      badge.style.display = 'none';
+    } else {
+      badge.style.display = 'flex';
+    }
+  }
+
+  // Call on page load
+  updateFloatingCartCount();
 </script>
+
+<!-- Floating Cart Button -->
+<a href="cart.html" class="floating-checkout" aria-label="View Cart">
+    <i class="fa fa-shopping-cart"></i>
+    <span class="floating-cart-count">0</span>
+</a>
+
 
 </body>
 </html>
-

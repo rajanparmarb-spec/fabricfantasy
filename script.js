@@ -86,12 +86,24 @@ function loadProducts() {
         const product = document.createElement("div");
         product.className = "product";
 
+        // Parse sizes from API (e.g., "XS,S,M,L,XL" or "S,M,L")
+        const availableSizes = item.size ? item.size.split(',').map(s => s.trim()) : [];
+        
+        // Generate size buttons dynamically
+        const sizeButtons = availableSizes.map((size, index) => {
+          // Set middle size as active by default
+          const isActive = index === Math.floor(availableSizes.length / 2) ? 'active' : '';
+          return `<button class="size ${isActive}" onclick="selectSize(this)">${size}</button>`;
+        }).join('');
+
         product.innerHTML = `
           <div class="fashion-product"
                onclick="openProduct(
                  '${item.image}',
                  '${item.name.replace(/'/g, "\\'")}',
-                 '${item.price}'
+                 '${item.price}',
+                 '${item.description || 'Premium quality product'}',
+                 '${item.size || ''}'
                )">
 
             <img src="${item.image}" alt="${item.name}">
@@ -101,11 +113,7 @@ function loadProducts() {
               <p class="price">₹${Number(item.price).toLocaleString()}</p>
               <div class="option">
                 <div class="sizes" onclick="event.stopPropagation()">
-                  <button class="size" onclick="selectSize(this)">XS</button>
-                  <button class="size" onclick="selectSize(this)">S</button>
-                  <button class="size active" onclick="selectSize(this)">M</button>
-                  <button class="size" onclick="selectSize(this)">L</button>
-                  <button class="size" onclick="selectSize(this)">XL</button>
+                  ${sizeButtons}
                 </div>
               </div>
 
@@ -123,11 +131,13 @@ function loadProducts() {
     .catch(err => console.error("Error loading products", err));
 }
 
-function openProduct(image, name, price) {
+function openProduct(image, name, price, description, sizes) {
   const productData = {
     image,
     name,
-    price
+    price,
+    description,
+    sizes
   };
 
   localStorage.setItem("selectedProduct", JSON.stringify(productData));

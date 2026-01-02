@@ -45,19 +45,19 @@
                     <input type="text" id="customer-name" placeholder="Enter your full name" required>
                     <i class="fa fa-user input-icon"></i>
                 </div>
-                
+
                 <div class="form-group with-icon">
                     <label for="customer-email">Email Address *</label>
                     <input type="email" id="customer-email" placeholder="your@email.com" required>
                     <i class="fa fa-envelope input-icon"></i>
                 </div>
-                
+
                 <div class="form-group with-icon">
                     <label for="customer-phone">Phone Number *</label>
                     <input type="tel" id="customer-phone" placeholder="+91 XXXXX XXXXX" required>
                     <i class="fa fa-phone input-icon"></i>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="customer-address">Delivery Address *</label>
                     <textarea id="customer-address" rows="3" placeholder="Enter your complete delivery address with pincode" required></textarea>
@@ -77,14 +77,23 @@
 	</div>
     </div>
 </section>
+<!-- Success Popup -->
+<div id="successPopup" class="success-popup">
+  <div class="success-card">
+    <div class="success-emoji">🎉</div>
+    <h2>Hooray!</h2>
+    <p>Thank you for shopping with <strong>FabricFantasy</strong></p>
+    <p class="success-sub">Your order has been placed successfully ✨</p>
+    <button onclick="closeSuccess()">Continue Shopping</button>
+  </div>
+</div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="script.js"></script>
 <script>
-const APPSCRIPTURL = "https://script.google.com/macros/s/AKfycbzTuo2OlwBFyemhF_OxUK_5snLMgdwiGLnOz4Y0l7f9eVEJ3wL9oN4L1Ff0CdFO3uue/exec";
+const APPSCRIPTURL = "https://script.google.com/macros/s/AKfycbxWle9bgET4XEqsIY5sKVBqJxaFAEJpBZdVobjtoMHQ9DuDBl3cu78Q5V6lLEjc8Rjd/exec";
 
 function paySuccessful(payload) {
-	console.log(payload);
 	// Send payment info to Apps Script for verification
 	fetch(APPSCRIPTURL, {
 		method: "POST",
@@ -101,6 +110,8 @@ function paySuccessful(payload) {
 				document.getElementById('customer-email').value = '';
 				document.getElementById('customer-phone').value = '';
 				document.getElementById('customer-address').value = '';
+				  document.getElementById("successPopup").style.display = "flex";
+
 			} else {
 				console.log(data);
 			}
@@ -108,46 +119,52 @@ function paySuccessful(payload) {
 		.catch(err => console.error(err));
 }
 
+function closeSuccess() {
+  document.getElementById("successPopup").style.display = "none";
+  window.location.href = "index.html"; // optional redirect
+}
+
+
 function validateForm() {
 	const name = document.getElementById('customer-name').value.trim();
 	const email = document.getElementById('customer-email').value.trim();
 	const phone = document.getElementById('customer-phone').value.trim();
 	const address = document.getElementById('customer-address').value.trim();
-	
+
 	if (!name) {
 		alert('Please enter your name');
 		return false;
 	}
-	
+
 	if (!email) {
 		alert('Please enter your email address');
 		return false;
 	}
-	
+
 	// Basic email validation
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	if (!emailRegex.test(email)) {
 		alert('Please enter a valid email address');
 		return false;
 	}
-	
+
 	if (!phone) {
 		alert('Please enter your phone number');
 		return false;
 	}
-	
+
 	// Basic phone validation (at least 10 digits)
 	const phoneRegex = /\d{10,}/;
 	if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
 		alert('Please enter a valid phone number (at least 10 digits)');
 		return false;
 	}
-	
+
 	if (!address) {
 		alert('Please enter your delivery address');
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -159,12 +176,12 @@ function payNow() {
 		alert("Cart is empty!");
 		return;
 	}
-	
+
 	// Validate form before proceeding
 	if (!validateForm()) {
 		return;
 	}
-	
+
 	// Get customer details
 	const customerDetails = {
 		name: document.getElementById('customer-name').value.trim(),
@@ -196,7 +213,7 @@ function payNow() {
 				},
 				handler: function (response) {
 					paySuccessful({
-						...orderInfo, 
+						...orderInfo,
 						payment_id: response.razorpay_payment_id,
 						total: total,
 						items: cart,
@@ -232,15 +249,18 @@ function renderCart() {
 		const div = document.createElement('div');
 		div.classList.add('product');
 		div.innerHTML = `
-	    <img src="${item.image || 'https://via.placeholder.com/300'}" alt="${item.name}">
-	    <h3>${item.name}</h3>
-	    <p>₹${item.price}</p>
-	    <button onclick="removeFromCart(${index})">Remove</button>
-	`;
+			<img src="${item.image || 'https://via.placeholder.com/300'}" alt="${item.name}">
+			<div class="fashion-info">
+				<h3>${item.name}</h3>
+				<p class="price">₹${item.price.toLocaleString()}</p>
+				<p style="font-size: 13px; color: #666; margin: 5px 0;">Size: ${item.size || 'M'}</p>
+				<button class="add-cart-btn" onclick="removeFromCart(${index})">REMOVE</button>
+			</div>
+		`;
 		container.appendChild(div);
 	});
 
-	document.getElementById('cart-total').innerText = `₹${total}`;
+	document.getElementById('cart-total').innerText = `₹${total.toLocaleString()}`;
 	document.getElementById('cart-count').innerText = cart.length;
 }
 
