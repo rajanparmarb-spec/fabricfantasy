@@ -73,6 +73,28 @@ window.selectSize = function(button) {
   button.classList.add("active");
 }
 
+// GLOBAL function to handle color clicks
+window.selectColor = function(colorCircle, event) {
+  event.stopPropagation();
+  const colorsContainer = colorCircle.parentElement;
+  colorsContainer.querySelectorAll(".color-circle").forEach(c => c.classList.remove("active"));
+  colorCircle.classList.add("active");
+}
+
+// NEW: Function to get all images from product data
+function getProductImages(product) {
+  const images = [product.image];
+  let count = 1;
+  
+  // Check for image1, image2, image3, etc.
+  while (product[`image${count}`]) {
+    images.push(product[`image${count}`]);
+    count++;
+  }
+  
+  return images;
+}
+
 function loadProducts() {
   const sheetURL = "https://opensheet.elk.sh/1XXXU5lQDFYOvpWEAXZQEL3jlIGmCgQ8erj7cdAzvgIc/Sheet1";
   
@@ -96,21 +118,45 @@ function loadProducts() {
           return `<button class="size ${isActive}" onclick="selectSize(this)">${size}</button>`;
         }).join('');
 
+        // Parse colors from API (e.g., "Red,Blue,Green" or "#ff0000,#0000ff,#00ff00")
+        const availableColors = item.color ? item.color.split(',').map(c => c.trim()) : [];
+        
+        // Generate color circles dynamically
+        const colorCircles = availableColors.map((color, index) => {
+          const isActive = index === 0 ? 'active' : '';
+          const colorStyle = color.startsWith('#') ? `background: ${color}` : `background: ${color.toLowerCase()}`;
+          return `<span class="color-circle ${isActive}" style="${colorStyle}" onclick="selectColor(this, event)" title="${color}"></span>`;
+        }).join('');
+
+        // Get all images from the product data
+        const allImages = getProductImages(item);
+        const productDataString = JSON.stringify({
+          images: allImages,
+          name: item.name,
+          price: item.price,
+          description: item.description || 'Premium quality product',
+          sizes: item.size || '',
+          colors: item.color || ''
+        }).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
         product.innerHTML = `
           <div class="fashion-product"
-               onclick="openProduct(
-                 '${item.image}',
-                 '${item.name.replace(/'/g, "\\'")}',
-                 '${item.price}',
-                 '${item.description || 'Premium quality product'}',
-                 '${item.size || ''}'
-               )">
+               onclick='openProductWithImages(${productDataString})'>
 
             <img src="${item.image}" alt="${item.name}">
 
             <div class="fashion-info">
               <h3>${item.name}</h3>
               <p class="price">₹${Number(item.price).toLocaleString()}</p>
+              
+              ${colorCircles ? `
+              <div class="color-option" onclick="event.stopPropagation()">
+                <div class="color-circles">
+                  ${colorCircles}
+                </div>
+              </div>
+              ` : ''}
+              
               <div class="option">
                 <div class="sizes" onclick="event.stopPropagation()">
                   ${sizeButtons}
@@ -131,15 +177,8 @@ function loadProducts() {
     .catch(err => console.error("Error loading products", err));
 }
 
-function openProduct(image, name, price, description, sizes) {
-  const productData = {
-    image,
-    name,
-    price,
-    description,
-    sizes
-  };
-
+// NEW: Function to open product with multiple images
+function openProductWithImages(productData) {
   localStorage.setItem("selectedProduct", JSON.stringify(productData));
   window.location.href = "product.html";
 }

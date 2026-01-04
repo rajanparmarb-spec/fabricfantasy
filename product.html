@@ -24,9 +24,20 @@
 
 <section class="product-page">
   <!-- LEFT : IMAGES -->
-  <div class="product-images">
-    <img id="productImage" src="" alt="Product Image">
-    <img src="https://images.unsplash.com/photo-1520974735194-8f0c1f6a4f7b" alt="Back View">
+  <div class="product-images-wrapper">
+    <!-- Main Image Display with Zoom -->
+    <div class="main-image-container" id="imageZoomContainer">
+      <img id="mainProductImage" src="" alt="Product Image">
+      <div class="zoom-lens" id="zoomLens"></div>
+    </div>
+    
+    <!-- Zoomed Image Display -->
+    <div class="zoom-result" id="zoomResult"></div>
+    
+    <!-- Thumbnail Gallery Below Main Image -->
+    <div class="thumbnail-gallery">
+      <!-- Thumbnails will be dynamically loaded here -->
+    </div>
   </div>
   
   <!-- RIGHT : DETAILS -->
@@ -37,22 +48,19 @@
     </p>
     
     <!-- COLOR -->
-    <div class="option">
+    <div class="option" id="colorOption" style="display: none;">
       <span>Color:</span>
-      <div class="colors">
-        <span class="color purple"></span>
+      <div class="colors" id="productColors">
+        <!-- Colors will be dynamically loaded here -->
+
       </div>
     </div>
-    
+
     <!-- SIZE -->
     <div class="option">
       <span>Size:</span>
       <div class="sizes">
-        <!-- <button class="size-btn" onclick="selectProductSize(this)">XS</button>
-        <button class="size-btn" onclick="selectProductSize(this)">S</button>
-        <button class="size-btn active" onclick="selectProductSize(this)">M</button>
-        <button class="size-btn" onclick="selectProductSize(this)">L</button>
-        <button class="size-btn" onclick="selectProductSize(this)">XL</button> -->
+        <!-- Size buttons will be dynamically loaded here -->
       </div>
     </div>
     
@@ -65,7 +73,35 @@
   // Load product data
   const product = JSON.parse(localStorage.getItem("selectedProduct"));
   if (product) {
-    document.getElementById("productImage").src = product.image;
+    // Handle both old format (single image) and new format (multiple images)
+    const images = product.images || [product.image];
+    const thumbnailGallery = document.querySelector(".thumbnail-gallery");
+    const mainImage = document.getElementById("mainProductImage");
+    
+    // Set first image as main
+    mainImage.src = images[0];
+    mainImage.alt = product.name;
+    
+    // Clear existing thumbnails
+    thumbnailGallery.innerHTML = '';
+    
+    // Add all thumbnails
+    images.forEach((imageUrl, index) => {
+      const thumbContainer = document.createElement('div');
+      thumbContainer.className = 'thumbnail-item' + (index === 0 ? ' active' : '');
+      
+      const img = document.createElement('img');
+      img.src = imageUrl;
+      img.alt = `${product.name} - View ${index + 1}`;
+      img.onclick = function() { selectImage(imageUrl, thumbContainer); };
+      
+      thumbContainer.appendChild(img);
+      thumbnailGallery.appendChild(thumbContainer);
+    });
+    
+    // Initialize zoom for first image
+    initImageZoom("mainProductImage", "zoomResult");
+    
     document.getElementById("productName").innerText = product.name;
     document.getElementById("productPrice").innerText = "₹" + Number(product.price).toLocaleString();
     
@@ -73,6 +109,33 @@
     const descriptionEl = document.querySelector(".description");
     if (product.description && descriptionEl) {
       descriptionEl.innerText = product.description;
+    }
+    
+    // Generate color options from API data
+    const colorsContainer = document.getElementById("productColors");
+    const colorOption = document.getElementById("colorOption");
+    if (product.colors && colorsContainer) {
+      const availableColors = product.colors.split(',').map(c => c.trim());
+      colorsContainer.innerHTML = '';
+      
+      availableColors.forEach((color, index) => {
+        const colorSpan = document.createElement('span');
+        colorSpan.className = 'color'; // + (index === 0 ? ' active' : '');
+        
+        // Check if color is hex code or color name
+        if (color.startsWith('#')) {
+          colorSpan.style.background = color;
+        } else {
+          colorSpan.style.background = color.toLowerCase();
+        }
+        
+        colorSpan.title = color;
+        // colorSpan.onclick = function() { selectProductColor(this); };
+        
+        colorsContainer.appendChild(colorSpan);
+      });
+      
+      colorOption.style.display = 'block';
     }
     
     // Generate size buttons from API data
@@ -97,12 +160,89 @@
     }
   }
 
+  // Function to change main image when thumbnail is clicked
+  function selectImage(imageUrl, thumbElement) {
+    const mainImage = document.getElementById("mainProductImage");
+    mainImage.src = imageUrl;
+    
+    // Remove active class from all thumbnails
+    document.querySelectorAll('.thumbnail-item').forEach(thumb => {
+      thumb.classList.remove('active');
+    });
+    
+    // Add active class to clicked thumbnail
+    thumbElement.classList.add('active');
+    
+    // Reinitialize zoom for new image
+    initImageZoom("mainProductImage", "zoomResult");
+  }
+
+  // IMAGE ZOOM FUNCTIONALITY
+  function initImageZoom(imgID, resultID) {
+    const img = document.getElementById(imgID);
+    const result = document.getElementById(resultID);
+    const lens = document.getElementById("zoomLens");
+    const container = document.getElementById("imageZoomContainer");
+    
+    if (!img || !result || !lens) return;
+    
+    // Remove previous event listeners
+    container.onmousemove = null;
+    container.onmouseleave = null;
+    
+    const cx = result.offsetWidth / lens.offsetWidth;
+    const cy = result.offsetHeight / lens.offsetHeight;
+    
+    result.style.backgroundImage = `url('${img.src}')`;
+    
+    // Mouse move event
+    container.onmousemove = function(e) {
+      e.preventDefault();
+      const pos = getCursorPos(e, img);
+      let x = pos.x - (lens.offsetWidth / 2);
+      let y = pos.y - (lens.offsetHeight / 2);
+      
+      // Prevent lens from going outside image
+      if (x > img.width - lens.offsetWidth) x = img.width - lens.offsetWidth;
+      if (x < 0) x = 0;
+      if (y > img.height - lens.offsetHeight) y = img.height - lens.offsetHeight;
+      if (y < 0) y = 0;
+      
+      lens.style.left = x + 'px';
+      lens.style.top = y + 'px';
+      lens.style.display = 'block';
+      result.style.display = 'block';
+      
+      result.style.backgroundPosition = `-${x * cx}px -${y * cy}px`;
+    };
+    
+    // Mouse leave event
+    container.onmouseleave = function() {
+      lens.style.display = 'none';
+      result.style.display = 'none';
+    };
+    
+    function getCursorPos(e, img) {
+      const a = img.getBoundingClientRect();
+      let x = e.pageX - a.left - window.pageXOffset;
+      let y = e.pageY - a.top - window.pageYOffset;
+      return {x: x, y: y};
+    }
+  }
+
   // Update cart count on page load
   function updateCartCount() {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     document.getElementById('cart-count').innerText = cart.length;
   }
   updateCartCount();
+
+  // Color selection function
+  window.selectProductColor = function(colorElement) {
+    const colorsContainer = colorElement.parentElement;
+    colorsContainer.querySelectorAll(".color").forEach(c => c.classList.remove("active"));
+    colorElement.classList.add("active");
+  }
 
   // Size selection function
   window.selectProductSize = function(button) {
@@ -125,13 +265,19 @@
     }
 
     const size = selectedSize.innerText;
+    const images = product.images || [product.image];
+    
+    // Get selected color if available
+    const selectedColor = document.querySelector("#productColors .color.active");
+    const color = selectedColor ? selectedColor.title : '';
     
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push({
       name: product.name,
       price: Number(product.price),
-      image: product.image,
-      size: size
+      image: images[0], // Use first image for cart
+      size: size,
+      color: color
     });
     
     localStorage.setItem("cart", JSON.stringify(cart));

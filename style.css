@@ -23,27 +23,15 @@ body {
 
 header {
     position: sticky;
-    /* top: 14px; */
+    top: 0;
     z-index: 999;
-    margin: 0 auto;
-    /* width: calc(100% - 32px); */
-    /* max-width: 1300px; */
-
     display: flex;
     align-items: center;
     justify-content: space-between;
-
     padding: 14px 22px;
-    /* border-radius: 20px; */
-
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,0.12),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-
+    box-shadow: 0 10px 30px rgba(0,0,0,0.12);
     border: 1px solid rgba(255,255,255,0.6);
 }
 
@@ -184,7 +172,7 @@ section {
         backdrop-filter: blur(16px);
         border-radius: 18px;
         flex-direction: column;
-        padding: 12px 0;
+        /* padding: 12px 0; */
         display: none;
         box-shadow: 0 30px 60px rgba(0,0,0,0.15);
     }
