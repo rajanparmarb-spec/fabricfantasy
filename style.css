@@ -165,9 +165,10 @@ section {
 
     nav {
         position: absolute;
-        top: 70px;
-        left: 0;
-        width: 100%;
+        top: 64px;
+        right: 10px;
+        left: 10px;
+    width: calc(100% - 20px);
         background: rgba(255,255,255,0.95);
         backdrop-filter: blur(16px);
         border-radius: 18px;
@@ -1311,3 +1312,40 @@ footer {
   }
 }
 
+
+/* ===============================
+   MATCH INDEX HEADER TO PRODUCT HEADER SIZE
+   =============================== */
+
+header {
+  padding: 14px 22px; /* keep same as product */
+  min-height: auto;
+}
+
+header .logo {
+  font-size: 22px;
+  line-height: 1;
+}
+
+header nav a {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.menu-icon {
+  font-size: 22px; /* shrink hamburger */
+}
+
+@media (max-width: 768px) {
+  header {
+    padding: 12px 18px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .menu-icon {
+    font-size: 20px;
+  }
+}
