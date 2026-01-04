@@ -235,7 +235,7 @@
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     document.getElementById('cart-count').innerText = cart.length;
   }
-  updateCartCount();
+
 
   // Color selection function
   window.selectProductColor = function(colorElement) {
@@ -309,9 +309,12 @@
       badge.style.display = 'flex';
     }
   }
+document.addEventListener("DOMContentLoaded", () => {
+  updateCartCount();
+  updateFloatingCartCount();
+});
 
   // Call on page load
-  updateFloatingCartCount();
 </script>
 
 <!-- Floating Cart Button -->
