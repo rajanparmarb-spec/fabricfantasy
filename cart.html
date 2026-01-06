@@ -65,10 +65,32 @@
             </div>
 
             <h3>Order Summary</h3>
-            <div class="summary-line">
+            <div>
+				<!-- <div style="justify-content: space-between;  display: flex; margin: 0px 8px;">
+                <span>Subtotal</span>
+                <span id="cart-subtotal">₹0</span>
+				</div> -->
+
+				<!-- <div style="justify-content: space-between;  display: flex;  margin: 0px 8px;">
+                <span>Shipping</span>
+                <span id="shipping-charge">₹0</span>
+				</div> -->
+            </div>
+            <!-- <div class="summary-line">
                 <span>Total</span>
                 <strong id="cart-total">₹0</strong>
-            </div>
+            </div> -->
+<div class="summary-line total-line">
+    <span>
+        Total
+        <small class="price-inline">
+            (<span id="cart-subtotal">₹0</span> subtotal ·
+            <span id="shipping-charge">₹0</span> shipping)
+        </small>
+    </span>
+    <strong id="cart-total">₹0</strong>
+</div>
+
 
             <button class="checkout-btn" onclick="payNow()">Proceed to Checkout</button>
 
@@ -77,6 +99,7 @@
 	</div>
     </div>
 </section>
+
 <!-- Success Popup -->
 <div id="successPopup" class="success-popup">
   <div class="success-card">
@@ -92,6 +115,9 @@
 <script src="script.js"></script>
 <script>
 const APPSCRIPTURL = "https://script.google.com/macros/s/AKfycbxWle9bgET4XEqsIY5sKVBqJxaFAEJpBZdVobjtoMHQ9DuDBl3cu78Q5V6lLEjc8Rjd/exec";
+
+// Shipping configuration
+const SHIPPING_COST = 120; // ₹50 shipping charge
 
 function paySuccessful(payload) {
 	// Send payment info to Apps Script for verification
@@ -110,8 +136,7 @@ function paySuccessful(payload) {
 				document.getElementById('customer-email').value = '';
 				document.getElementById('customer-phone').value = '';
 				document.getElementById('customer-address').value = '';
-				  document.getElementById("successPopup").style.display = "flex";
-
+				document.getElementById("successPopup").style.display = "flex";
 			} else {
 				console.log(data);
 			}
@@ -121,9 +146,8 @@ function paySuccessful(payload) {
 
 function closeSuccess() {
   document.getElementById("successPopup").style.display = "none";
-  window.location.href = "index.html"; // optional redirect
+  window.location.href = "index.html";
 }
-
 
 function validateForm() {
 	const name = document.getElementById('customer-name').value.trim();
@@ -141,7 +165,6 @@ function validateForm() {
 		return false;
 	}
 
-	// Basic email validation
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 	if (!emailRegex.test(email)) {
 		alert('Please enter a valid email address');
@@ -153,7 +176,6 @@ function validateForm() {
 		return false;
 	}
 
-	// Basic phone validation (at least 10 digits)
 	const phoneRegex = /\d{10,}/;
 	if (!phoneRegex.test(phone.replace(/\D/g, ''))) {
 		alert('Please enter a valid phone number (at least 10 digits)');
@@ -168,27 +190,35 @@ function validateForm() {
 	return true;
 }
 
+function calculateTotal() {
+	const cart = JSON.parse(localStorage.getItem("cart")) || [];
+	const subtotal = cart.reduce((sum, item) => sum + item.price, 0);
+	const shipping = cart.length > 0 ? SHIPPING_COST : 0;
+	const total = subtotal + shipping;
+	
+	return { subtotal, shipping, total };
+}
+
 function payNow() {
 	const cart = JSON.parse(localStorage.getItem("cart")) || [];
-	const total = cart.reduce((sum, item) => sum + item.price, 0);
-
+	
 	if(cart.length === 0){
 		alert("Cart is empty!");
 		return;
 	}
 
-	// Validate form before proceeding
 	if (!validateForm()) {
 		return;
 	}
 
-	// Get customer details
 	const customerDetails = {
 		name: document.getElementById('customer-name').value.trim(),
 		email: document.getElementById('customer-email').value.trim(),
 		phone: document.getElementById('customer-phone').value.trim(),
 		address: document.getElementById('customer-address').value.trim()
 	};
+
+	const { subtotal, shipping, total } = calculateTotal();
 
 	fetch(APPSCRIPTURL, {
 		method: "POST",
@@ -215,6 +245,8 @@ function payNow() {
 					paySuccessful({
 						...orderInfo,
 						payment_id: response.razorpay_payment_id,
+						subtotal: subtotal,
+						shipping: shipping,
 						total: total,
 						items: cart,
 						customer: customerDetails,
@@ -236,16 +268,17 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 function renderCart() {
 	const container = document.getElementById('cart-items');
 	container.innerHTML = '';
-	let total = 0;
 
 	if(cart.length === 0){
 		container.innerHTML = "<p style='text-align:center; color:#555;'>Your cart is empty.</p>";
+		document.getElementById('cart-subtotal').innerText = `₹0`;
+		document.getElementById('shipping-charge').innerText = `₹0`;
 		document.getElementById('cart-total').innerText = `₹0`;
+		document.getElementById('cart-count').innerText = '0';
 		return;
 	}
 
 	cart.forEach((item, index) => {
-		total += item.price;
 		const div = document.createElement('div');
 		div.classList.add('product');
 		div.innerHTML = `
@@ -260,6 +293,10 @@ function renderCart() {
 		container.appendChild(div);
 	});
 
+	const { subtotal, shipping, total } = calculateTotal();
+	
+	document.getElementById('cart-subtotal').innerText = `₹${subtotal.toLocaleString()}`;
+	document.getElementById('shipping-charge').innerText = `₹${shipping.toLocaleString()}`;
 	document.getElementById('cart-total').innerText = `₹${total.toLocaleString()}`;
 	document.getElementById('cart-count').innerText = cart.length;
 }

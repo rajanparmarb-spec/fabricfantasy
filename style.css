@@ -1349,3 +1349,78 @@ header nav a {
     font-size: 20px;
   }
 }
+
+/* Summary container */
+.summary-box {
+    background: #fafbff;
+    border-radius: 14px;
+    padding: 12px 10px;
+    margin-bottom: 14px;
+}
+
+/* Row styling */
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Divider line */
+.summary-row:not(:last-child) {
+    border-bottom: 1px dashed #e6e8f0;
+}
+
+/* Shipping highlight (soft) */
+.summary-row.shipping span:last-child {
+    color: #8b93a6;
+    font-weight: 500;
+}
+
+/* Amounts */
+.summary-row span:last-child {
+    font-weight: 600;
+    color: #222;
+}
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
+
+.shipping-inline {
+    font-size: 12px;
+    font-weight: 400;
+    color: #9aa3af;
+    margin-left: 6px;
+}
+.total-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 14px;
+    margin-top: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111;
+}
+
+.price-inline {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: #9aa3af;
+    margin-top: 2px;
+}
+
+.price-inline span {
+    font-weight: 500;
+    color: #6b7280;
+}
