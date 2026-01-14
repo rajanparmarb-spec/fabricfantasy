@@ -1444,7 +1444,7 @@ header nav a {
   .sizes .size {
     width: 25px;
 	  
-    height: 30px;
+    height: 25px;
     flex: 0 0 30px;
 
     display: flex;
