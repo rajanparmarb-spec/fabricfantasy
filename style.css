@@ -1141,8 +1141,8 @@ footer {
 }
 
 .sizes button {
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
   background: none;
   border: none;
   font-size: 12px;
@@ -1442,9 +1442,9 @@ header nav a {
   }
 
   .sizes .size {
-    width: 36px;
-    height: 36px;
-    flex: 0 0 36px;
+    width: 30px;
+    height: 30px;
+    flex: 0 0 30px;
 
     display: flex;
     align-items: center;
