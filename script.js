@@ -114,7 +114,7 @@ function loadProducts() {
         // Generate size buttons dynamically
         const sizeButtons = availableSizes.map((size, index) => {
           // Set middle size as active by default
-          const isActive = index === Math.floor(availableSizes.length / 2) ? 'active' : '';
+          const isActive = (index === 0) ? 'active' : '';
           return `<button class="size ${isActive}" onclick="selectSize(this)">${size}</button>`;
         }).join('');
 
