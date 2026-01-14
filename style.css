@@ -1141,7 +1141,7 @@ footer {
 }
 
 .sizes button {
-    width: 25px;
+ /*   width: 25px; */
     height: 25px;
   background: none;
   border: none;
@@ -1442,7 +1442,7 @@ header nav a {
   }
 
   .sizes .size {
-    width: 25px;
+    /* width: 25px; */
 	  
     height: 25px;
     flex: 0 0 20px;
