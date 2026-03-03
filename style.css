@@ -1011,9 +1011,14 @@ footer {
   }
 
   .cart-right {
-    position: static;
+    order: 2;        /* Appears below */
+    position: static; /* Natural scrolling */
   }
 
+  .cart-left {
+    order: 1;        /* Appears on top */
+  }
+  
   .product-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;

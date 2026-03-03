@@ -238,7 +238,13 @@ function loadProducts() {
         })
           .replace(/'/g, "\\'")
           .replace(/"/g, "&quot;");
-
+             // ${colorCircles ? `
+                // <div class="color-option" onclick="event.stopPropagation()">
+                //   <div class="color-circles">
+                //     ${colorCircles}
+                //   </div>
+                // </div>
+                // ` : ""}
         const productHTML = `
           <div class="product" style="animation-delay: ${index * 0.05}s">
             <div class="fashion-product" onclick='openProductWithImages(${productDataString})' style="cursor: pointer;">
@@ -247,13 +253,7 @@ function loadProducts() {
                 <h3>${item.name}</h3>
                 <p class="price">₹${Number(item.price).toLocaleString()}</p>
                 
-                ${colorCircles ? `
-                <div class="color-option" onclick="event.stopPropagation()">
-                  <div class="color-circles">
-                    ${colorCircles}
-                  </div>
-                </div>
-                ` : ""}
+   
                 
                 <div class="option">
                   <div class="sizes" onclick="event.stopPropagation()">
