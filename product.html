@@ -10,14 +10,17 @@
 <body>
 
 <!-- Header -->
-<header style="position: sticky; top: 0; z-index: 999; display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(18px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); border: 1px solid rgba(255,255,255,0.6);">
-    <div class="logo" style="font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: #111;">FabricFantasy</div>
-    <nav style="display: flex; gap: 26px; align-items: center;">
-        <a href="index.html" style="text-decoration: none; font-size: 14px; font-weight: 500; color: #374151;">Home</a>
-        <a href="index.html#shop" style="text-decoration: none; font-size: 14px; font-weight: 500; color: #374151;">Shop</a>
-        <a href="cart.html" class="cart" style="position: relative; text-decoration: none; color: #374151;">
+<header >
+    <div class="logo">FabricFantasy</div>
+    <!-- <div class="menu-icon" onclick="toggleMenu()">☰</div> -->
+    <nav id="nav-menu">
+        <a href="index.html">Home</a>
+        <!-- <a href="categories.html">Categories</a> -->
+        <a href="index.html#shop">Shop</a>
+        <!-- <a href="index.html#contact">Contact</a> -->
+        <a href="cart.html" class="cart">
             <i class="fa fa-shopping-cart fa-lg"></i>
-            <span id="cart-count" style="position: absolute; top: -8px; right: -10px; background: #f4b400; color: #111; font-size: 12px; padding: 2px 6px; border-radius: 50%; font-weight: bold;">0</span>
+            <span id="cart-count">0</span>
         </a>
     </nav>
 </header>
