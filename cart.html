@@ -1,9 +1,11 @@
+---
+---
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FabricFantasy | Your Cart</title>
+    <title>{{site.name}} | Your Cart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -11,7 +13,7 @@
 
 <!-- Header -->
 <header>
-    <div class="logo">FabricFantasy</div>
+    <div class="logo">{{ site.title }}</div>
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
     <nav id="nav-menu">
         <a href="index.html">Home</a>
@@ -105,7 +107,7 @@
   <div class="success-card">
     <div class="success-emoji">🎉</div>
     <h2>Hooray!</h2>
-    <p>Thank you for shopping with <strong>FabricFantasy</strong></p>
+    <p>Thank you for shopping with <strong>{{ site.name }}</strong></p>
     <p class="success-sub">Your order has been placed successfully ✨</p>
     <button onclick="closeSuccess()">Continue Shopping</button>
   </div>
