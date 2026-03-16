@@ -241,14 +241,14 @@ background:
 
 .products {
   padding: 15px 16px;
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(4, minmax(160px, 1fr));
+   gap: 16px;
 }
 
 .product {
